@@ -49,6 +49,11 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+# Fixed at process start -- /v1/metadata should report a stable submission
+# timestamp, not "now" on every call.
+SUBMITTED_AT = _now_iso()
+
+
 def get_context(scope: str, context_id: str) -> Optional[dict]:
     entry = contexts.get((scope, context_id))
     return entry["payload"] if entry else None
@@ -95,7 +100,7 @@ async def metadata():
         ),
         "contact_email": "vineetrajput7902@gmail.com",
         "version": "1.0.0",
-        "submitted_at": _now_iso(),
+        "submitted_at": SUBMITTED_AT,
     }
 
 
