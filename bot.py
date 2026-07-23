@@ -59,6 +59,19 @@ def get_category_for_merchant(merchant: dict) -> Optional[dict]:
 
 
 # ---------------------------------------------------------------------------
+# GET / -- host platform-level health check target (e.g. Render defaults its
+# own infra health check to "/"; without a 2xx response there, some hosts
+# will consider the instance unhealthy and recycle it, producing exactly the
+# intermittent failures a bare 404 here would otherwise cause). Not part of
+# the judge's contract -- the judge only calls /v1/*.
+# ---------------------------------------------------------------------------
+
+@app.get("/")
+async def root():
+    return {"status": "ok", "service": "vera-challenge-bot"}
+
+
+# ---------------------------------------------------------------------------
 # GET /v1/healthz, GET /v1/metadata
 # ---------------------------------------------------------------------------
 
